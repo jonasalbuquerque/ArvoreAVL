@@ -1,0 +1,25 @@
+# depslib dependency file v1.0
+1513289485 source:c:\users\jonas albuquerque\desktop\ap3\avl.cpp
+	"avl.hpp"
+
+1513228729 
+
+1513289211 c:\users\jonas albuquerque\desktop\ap3\avl.hpp
+	<iostream>
+	<new>
+	<stdlib.h>
+
+1513286042 source:c:\users\jonas albuquerque\desktop\ap3\main.cpp
+	"avl.hpp"
+
+1513259501 source:/home/aluno/Área de Trabalho/ap3/main.cpp
+	"avl.hpp"
+
+1513256541 /home/aluno/Área de Trabalho/ap3/avl.hpp
+	<iostream>
+	<new>
+	<stdlib.h>
+
+1513260008 source:/home/aluno/Área de Trabalho/ap3/avl.cpp
+	"avl.hpp"
+
