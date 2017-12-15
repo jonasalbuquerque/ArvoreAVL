@@ -14,16 +14,16 @@ struct DicAVL { Noh *raiz; };
 
 void inicializar (DicAVL &D); // Inicializa D como uma arvore vazia.
 
-void RotacaoLL(DicAVL &D,Noh *raiz);
-void RotacaoRR(DicAVL &D,Noh *raiz);
-void RotacaoLR(DicAVL &D,Noh *raiz);
-void RotacaoRL(DicAVL &D,Noh *raiz);
+void RotacaoLL(DicAVL &D);
+void RotacaoRR(DicAVL &D);
+void RotacaoLR(DicAVL &D);
+void RotacaoRL(DicAVL &D);
 int maior(int a, int b);
 int get_altura(Noh *n);
 int fatorBalanceamento(Noh *n);
-int balancear(Noh *raiz,TC c);
+int balancear(DicAVL &D,TC c);
 Noh* procuraMenor(Noh *p);
-int balancear_2(Noh *raiz,TC c);
+int remove_AVL(DicAVL &D,TC c);
 
 Noh* inserir (DicAVL &D, TC c, TV v); // Retorna um ponteiro para o novo nó, ou nulo se erro de alocacao
 Noh* procurar (DicAVL &D, TC c); // Retorna um ponteiro para o nó da chave procurada, ou nulo se a chave não estiver em D.
