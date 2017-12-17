@@ -18,11 +18,13 @@ int maior(int a, int b){
 }
 
 void RotacaoLL(DicAVL &D){
-    //cout << "ROTACAO LL NO "<<D.raiz->chave << endl;
+    //cout << "ROTAÇÃO LL NO " << D.raiz->chave << endl;
     Noh *raiz = D.raiz;
     Noh *no = new(std::nothrow) Noh;
     no = raiz->esq;
     raiz->esq = no->dir;
+    if (no->dir!=NULL)
+        no->dir->pai = raiz;
     if (raiz->pai!=NULL){
         if (no->esq!=NULL){
             if(raiz->pai->dir==raiz)
@@ -44,11 +46,13 @@ void RotacaoLL(DicAVL &D){
     raiz = no;
 }
 void RotacaoRR(DicAVL &D){
-    //cout << "ROTACAO RR NO "<< D.raiz->chave <<endl;
+    //cout << "ROTAÇÃO RR NO " << D.raiz->chave << endl;
     Noh *raiz = D.raiz;
     Noh *no = new(std::nothrow) Noh;
     no = raiz->dir;
     raiz->dir = no->esq;
+    if (no->esq!=NULL)
+        no->esq->pai = raiz;
     no->esq = raiz;
     if (raiz->pai!=NULL){
         if (no->dir!=NULL){
@@ -64,17 +68,10 @@ void RotacaoRR(DicAVL &D){
     raiz->pai = no;
     raiz->h = maior(get_altura(raiz->esq), get_altura(raiz->dir)) + 1;
     no->h = maior(get_altura(no->dir), get_altura(raiz)) + 1;
-    cout << "ANTES : " << raiz->chave << endl;
     if(D.raiz->chave == raiz->chave){
         D.raiz=no;
     }
     raiz = no;
-    /*cout << "DEPOIS : " << raiz->chave << endl;
-    cout << "RAIZ_temporaria" << raiz->chave << endl;
-    //cout << "ESQ: " << raiz->esq->chave << " DIR: " << raiz->dir->chave << endl;
-    cout << "ESQ: " << raiz->esq->chave << " DIR: " << raiz->dir << endl;
-    //cout << "ESQ_PAI: " << raiz->esq->pai->chave << " DIR_PAI: " << raiz->dir->pai->chave << endl;
-    cout << "Raiz_PAI_esq: " << raiz->pai->esq->chave <<endl;*/
 }
 void RotacaoLR(DicAVL &D){
     DicAVL di = D;
@@ -88,11 +85,9 @@ void RotacaoRL(DicAVL &D){
     RotacaoLL(di);
     RotacaoRR(D);
 }
-
 int balancear(DicAVL &D,TC c){
-    if (D.raiz->chave == c){
+    if (D.raiz->chave == c)
         return 1;
-    }
     int res;
     DicAVL di = D;
     if (c < D.raiz->chave){
@@ -163,7 +158,6 @@ Noh* inserir (DicAVL &D, TC c, TV v){
     balancear(D,n->chave);
     return n;
 }
-
 Noh* procurar (DicAVL &D, TC c){
     if (D.raiz == NULL){
         return D.raiz;
@@ -191,9 +185,96 @@ Noh* procuraMenor(Noh *p){
     return n1;
 }
 
+int remove_AVL2(DicAVL &D,TC c){
+    if (D.raiz==NULL){
+        return 1;
+    }
+    int res;
+    DicAVL di = D;
+    if (c < D.raiz->chave){
+        di.raiz=D.raiz->esq;
+        if ((res=remove_AVL2(di, c))==1) {
+            if(fatorBalanceamento(D.raiz)>=2){
+                if (get_altura(D.raiz->dir->esq)<=get_altura(D.raiz->dir->dir)){
+                    RotacaoRR(D);
+                }
+                else
+                    RotacaoRL(D);
+            }
+        }
+    }else if (c > D.raiz->chave) {
+        di.raiz=D.raiz->dir;
+        if ((res=remove_AVL2(di, c))==1) {
+            if(fatorBalanceamento(D.raiz)>=2){
+                if (get_altura(D.raiz->esq->dir) <= get_altura(D.raiz->esq->esq))
+                    RotacaoLL(D);
+                else
+                    RotacaoLR(D);
+            }
+        }
+    }else if (c == D.raiz->chave){
+        if ((D.raiz->esq==NULL) || (D.raiz->dir==NULL)){
+            Noh *old = D.raiz;
+            if (D.raiz->esq!=NULL){
+                if (D.raiz->pai!=NULL){
+                    if (D.raiz->pai->esq==D.raiz)
+                        D.raiz->pai->esq = D.raiz->esq;
+                    else
+                        D.raiz->pai->dir = D.raiz->esq;
+                }
+                D.raiz->esq->pai = D.raiz->pai;
+                D.raiz=D.raiz->esq;
+            }
+            else{
+                if (D.raiz->pai!=NULL){
+                    if (D.raiz->pai->esq==D.raiz){
+                        D.raiz->pai->esq = D.raiz->dir;
+                    }
+                    else{
+                        D.raiz->pai->dir = D.raiz->dir;
+                    }
+                }
+                if (D.raiz->dir!=NULL){
+                    D.raiz->dir->pai = D.raiz->pai;
+                }
+                D.raiz=D.raiz->dir;
+            }
+            delete old;
+            //old=NULL;
+        }else{//2 filhos
+            Noh *temp = procuraMenor(D.raiz->dir);
+            //D.raiz->chave = temp->chave;
+            //D.raiz->valor = temp->valor;
+            D.raiz->esq->pai = temp;
+            if (temp->pai != D.raiz){
+                temp->pai->esq = temp->dir;
+                D.raiz->dir->pai = temp;
+                temp->dir=D.raiz->dir;
+            }
+            temp->pai = D.raiz->pai;
+            temp->esq = D.raiz->esq;
+            D.raiz = temp;
+            di.raiz=D.raiz->dir;
+            remove_AVL2(di,D.raiz->chave);
+            D.raiz->h = maior(get_altura(D.raiz->esq), get_altura(D.raiz->dir)) + 1;
+
+            if(fatorBalanceamento(D.raiz)>=2){
+                if (get_altura(D.raiz->esq->dir) <= get_altura(D.raiz->esq->esq))
+                    RotacaoLL(D);
+                else
+                    RotacaoLR(D);
+            }
+        }
+        return 1;
+    }
+    D.raiz->h = maior(get_altura(D.raiz->esq), get_altura(D.raiz->dir)) + 1;
+    return res;
+}
+
 int remove_AVL(DicAVL &D,TC c){
-    if (D.raiz==NULL)
+    if (D.raiz==NULL){
         return 0;
+    }
     int res;
     DicAVL di = D;
     if (c < D.raiz->chave){
@@ -231,21 +312,40 @@ int remove_AVL(DicAVL &D,TC c){
                 D.raiz=D.raiz->esq;
             }
             else{
-                if (D.raiz->pai!=NULL)
-                    if (D.raiz->pai->esq==D.raiz)
+                if (D.raiz->pai!=NULL){
+                    if (D.raiz->pai->esq==D.raiz){
                         D.raiz->pai->esq = D.raiz->dir;
-                    else
+                    }
+                    else{
                         D.raiz->pai->dir = D.raiz->dir;
-                if (D.raiz->dir!=NULL)
+                    }
+                }
+                if (D.raiz->dir!=NULL){
                     D.raiz->dir->pai = D.raiz->pai;
+                }
                 D.raiz=D.raiz->dir;
             }
-            free(old);
+            delete old;
+            //old=NULL;
         }else{//2 filhos
             Noh *temp = procuraMenor(D.raiz->dir);
-            D.raiz->chave = temp->chave;
+            //D.raiz->chave = temp->chave;
+            //D.raiz->valor = temp->valor;
+            D.raiz->esq->pai = temp;
+            if (temp->pai != D.raiz){
+                temp->pai->esq = temp->dir;
+                D.raiz->dir->pai = temp;
+                temp->dir=D.raiz->dir;
+            }
+            if (D.raiz->pai!=NULL)
+                D.raiz->pai->dir = temp;
+            temp->pai = D.raiz->pai;
+            temp->esq = D.raiz->esq;
+            D.raiz = temp;
             di.raiz=D.raiz->dir;
-            remove_AVL(di,D.raiz->chave);
+            remove_AVL2(di,D.raiz->chave);
+            D.raiz->h = maior(get_altura(D.raiz->esq), get_altura(D.raiz->dir)) + 1;
+
             if(fatorBalanceamento(D.raiz)>=2){
                 if (get_altura(D.raiz->esq->dir) <= get_altura(D.raiz->esq->esq))
                     RotacaoLL(D);
@@ -255,6 +355,7 @@ int remove_AVL(DicAVL &D,TC c){
         }
         return 1;
     }
+    D.raiz->h = maior(get_altura(D.raiz->esq), get_altura(D.raiz->dir)) + 1;
     return res;
 }
 
@@ -271,12 +372,10 @@ void libera_no(Noh *n){
         return;
     libera_no(n->esq);
     libera_no(n->dir);
-    free(n);
+    delete n;
     n=NULL;
 }
 void terminar (DicAVL &D){
-    if (D.raiz==NULL)
-        return;
     libera_no(D.raiz);
-    free(D.raiz);
+    D.raiz=NULL;
 }

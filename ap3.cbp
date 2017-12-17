@@ -12,6 +12,8 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
 					<Add option="-std=c++11" />
 					<Add option="-g" />
 				</Compiler>
@@ -23,6 +25,8 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-Wextra" />
+					<Add option="-Wall" />
 					<Add option="-std=c++11" />
 				</Compiler>
 				<Linker>
@@ -36,9 +40,6 @@
 		</Compiler>
 		<Unit filename="avl.cpp" />
 		<Unit filename="avl.hpp" />
-		<Unit filename="dicionarioAB.cpp">
-			<Option target="&lt;{~None~}&gt;" />
-		</Unit>
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />

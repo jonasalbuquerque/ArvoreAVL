@@ -24,11 +24,12 @@ int fatorBalanceamento(Noh *n);
 int balancear(DicAVL &D,TC c);
 Noh* procuraMenor(Noh *p);
 int remove_AVL(DicAVL &D,TC c);
+int remove_AVL2(DicAVL &D,TC c);
+void libera_no(Noh *n);
 
 Noh* inserir (DicAVL &D, TC c, TV v); // Retorna um ponteiro para o novo nó, ou nulo se erro de alocacao
 Noh* procurar (DicAVL &D, TC c); // Retorna um ponteiro para o nó da chave procurada, ou nulo se a chave não estiver em D.
 void remover (DicAVL &D, Noh *n); // 'n' aponta para o nó a ser removido
-void libera_no(Noh *n);
 void terminar (DicAVL &D); // Desaloca os nós da arvore.
 
 
