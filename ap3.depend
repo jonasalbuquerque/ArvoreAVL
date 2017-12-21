@@ -23,14 +23,17 @@
 1513260008 source:/home/aluno/Área de Trabalho/ap3/avl.cpp
 	"avl.hpp"
 
-1513484866 source:c:\users\jonas albuquerque\desktop\arvoreavl\avl.cpp
+1513553398 source:c:\users\jonas albuquerque\desktop\arvoreavl\avl.cpp
 	"avl.hpp"
+	<iostream>
+	<new>
+	<stdlib.h>
 
 1513478645 c:\users\jonas albuquerque\desktop\arvoreavl\avl.hpp
 	<iostream>
 	<new>
 	<stdlib.h>
 
-1513484747 source:c:\users\jonas albuquerque\desktop\arvoreavl\main.cpp
+1513545686 source:c:\users\jonas albuquerque\desktop\arvoreavl\main.cpp
 	"avl.hpp"
 

@@ -1,4 +1,29 @@
 #include "avl.hpp"
+/*
+#include <iostream>
+#include <new>
+#include <stdlib.h>
+using namespace std;
+
+//UNIVERSIDADE FEDERAL DO CEARÁ
+//AP3 - ESTRUTURA DE DADOS - PROF.: PABLO M. S. FARIAS
+//JONAS ALBUQUERQUE ARAÚJO
+//MATRÍCULA: 404213
+
+//funções auxiliares
+void RotacaoLL(DicAVL &D);
+void RotacaoRR(DicAVL &D);
+void RotacaoLR(DicAVL &D);
+void RotacaoRL(DicAVL &D);
+int get_altura(Noh *n);
+int fatorBalanceamento(Noh *n);
+int maior(int a, int b);
+int balancear(DicAVL &D,TC c);
+Noh* procuraMenor(Noh *p);
+int remove_AVL(DicAVL &D,TC c);
+int remove_AVL2(DicAVL &D,TC c);
+void libera_no(Noh *n);
+*/
 
 void inicializar (DicAVL &D){
     D.raiz = NULL;
@@ -247,10 +272,19 @@ int remove_AVL2(DicAVL &D,TC c){
             //D.raiz->valor = temp->valor;
             D.raiz->esq->pai = temp;
             if (temp->pai != D.raiz){
+                if (temp->dir!=NULL)
+                    temp->dir->pai = temp->pai;
                 temp->pai->esq = temp->dir;
                 D.raiz->dir->pai = temp;
                 temp->dir=D.raiz->dir;
             }
+            if (D.raiz->pai!=NULL){
+                if (D.raiz->pai->esq==D.raiz)
+                    D.raiz->pai->esq = temp;
+                else
+                    D.raiz->pai->dir = temp;
+            }
+            //temp->dir->pai = temp->pai;
             temp->pai = D.raiz->pai;
             temp->esq = D.raiz->esq;
             D.raiz = temp;
@@ -333,15 +367,22 @@ int remove_AVL(DicAVL &D,TC c){
             //D.raiz->valor = temp->valor;
             D.raiz->esq->pai = temp;
             if (temp->pai != D.raiz){
+                if (temp->dir!=NULL)
+                    temp->dir->pai = temp->pai;
                 temp->pai->esq = temp->dir;
                 D.raiz->dir->pai = temp;
                 temp->dir=D.raiz->dir;
             }
-            if (D.raiz->pai!=NULL)
-                D.raiz->pai->dir = temp;
+            if (D.raiz->pai!=NULL){
+                if (D.raiz->pai->esq==D.raiz)
+                    D.raiz->pai->esq = temp;
+                else
+                    D.raiz->pai->dir = temp;
+            }
             temp->pai = D.raiz->pai;
             temp->esq = D.raiz->esq;
             D.raiz = temp;
+            //temp=NULL;
             di.raiz=D.raiz->dir;
             remove_AVL2(di,D.raiz->chave);
             D.raiz->h = maior(get_altura(D.raiz->esq), get_altura(D.raiz->dir)) + 1;
